@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { Activity, BookOpen, BrainCircuit, CalendarDays, CheckCircle2, ChevronRight, CircleHelp, GraduationCap, LayoutDashboard, Menu, MessageSquareText, Search, ShieldAlert, Sparkles, Users, X } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
+// Production requests use the same origin and are routed to the backend by Vercel.
+const API = import.meta.env.VITE_API_BASE_URL || ''
 const sampleTopics = [
   { topic: 'Principal Component Analysis', score: 42 },
   { topic: 'Random Forest', score: 76 },
@@ -32,7 +33,7 @@ function App() {
   const [showAdd, setShowAdd] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
   useEffect(() => {
-    fetch(`${API}/health`).then(r=>r.json()).then(d=>setApiStatus(d.risk_model_loaded?'connected':'model missing')).catch(()=>setApiStatus('offline'))
+    fetch(`${API}/api/health`).then(r=>r.json()).then(d=>setApiStatus(d.risk_model_loaded?'connected':'model missing')).catch(()=>setApiStatus('offline'))
     fetch(`${API}/api/students`).then(r=>r.json()).then(d=>{if(Array.isArray(d.students)&&d.students.length) setStudents(d.students)}).catch(()=>{})
   }, [])
   const highRisk = students.filter(s=>s.risk_level==='high').length
